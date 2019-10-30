@@ -1,4 +1,6 @@
 # Singly-Linked List
+# # # # # # # # # # # # # # # # # # # #
+# - This solution is kind of naïve, but it works
 # - A big improvement would be: 
 #    incorporating an private #traverse method, to be utilized by the others
 # - Could also allow for empty list, if desired
