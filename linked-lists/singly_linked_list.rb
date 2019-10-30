@@ -1,135 +1,219 @@
-# Singly-Linked List
-# # # # # # # # # # # # # # # # # # # #
-# - This solution is kind of naïve, but it works
-# - A big improvement would be: 
-#    incorporating an private #traverse method, to be utilized by the others
-# - Could also allow for empty list, if desired
-
-class Node
-  attr_accessor :value, :next_node
-
-  def initialize value = nil, next_node = nil
-    @value = value
-    @next_node = next_node
-  end
-end
+# A singly linked list implementation
+#
+# # # # # # # # # # # # # # # # # # #
 
 class LinkedList
-  attr_reader :head, :tail
+  # including Enumerable, and defining #each allows me full power of Enumerable in this Class
+  include Enumerable
 
-  def initialize head_value
-    @head = Node.new(head_value)
-    @tail = @head
+  attr_reader :size
 
-    return self
-  end
+  ##########################################
+  # Internal 'private' class to represent data
+  class Node
+    attr_accessor :data, :next_node
 
-  def append value
-    # append new Node to end of the chain
-    @tail.next_node = Node.new(value)
-    
-    @tail = @tail.next_node
-  end
-
-  def prepend value
-    # put new Node into front of chain
-    @head = Node.new(value, @head)
-  end
-
-  def size
-    count = 1
-    # begin tracing with the head node
-    current = @head
-
-    while current.next_node
-      current = current.next_node
-      count += 1
+    def initialize data, next_node = nil
+      @data = data
+      @next_node = next_node
     end
 
-    return count
+    def to_s
+      @data.to_s
+    end
+  end
+  ##########################################
+
+  def initialize
+    @head = nil
+    @tail = nil
+    @size = 0
   end
 
-  def at index
-    return 'No value exists at that index' if index > size - 1
-
-    node = @head
-    trace = 0
-
-    until trace == index
-      node = node.next_node
-      trace += 1
-    end
-
-    return node.value
+  def empty?
+    return (size == 0)
   end
 
-  def pop
-    return "Cannot pop last item" if size == 1
-
-    current = @head
-
-    until current.next_node == @tail
-      current = current.next_node
-    end
-    
-    @tail = current
-    @tail.next_node = nil
-
-    return true
+  # Add an element to the tail of the linked list
+  # (alias for add_last)
+  # O(1)
+  def add element
+    add_last(element)
   end
 
-  def contains? value
-    current = @head
-    # traverse the nodes
-    loop do
-      # return if we found value on the head
-      return true if current.value == value
-      # otherwise step to next node
-      current = current.next_node
-      # exit loop if we reached the end of the list
-      break unless current
+  # Add an element to the tail of the linked list
+  # O(1)
+  def add_last element
+    if empty?
+      @head = @tail = Node.new(element, nil)
+    else
+      @tail.next_node = Node.new(element, nil)
+      @tail = @tail.next_node
     end
+    @size += 1
 
-    # no match found
-    return false
-  end
-
-  def find value
-    current = @head
-    index = 0
-    # traverse the nodes
-    loop do
-      # return if we found value on the head
-      return index if current.value == value
-      # otherwise step to next node
-      current = current.next_node
-      index += 1
-      # exit loop if we reached the end of the list
-      break unless current
-    end
-
-    # no match found
     return nil
   end
 
-  def to_s
-    # begin tracing with the head node
-    current = @head
+  # Add an element to the tail of the linked list
+  # O(1)
+  def add_first element
+    if empty?
+      @head = @tail = Node.new(element, nil)
+    else
+      @head = Node.new(element, @head)
+    end
+    @size += 1
 
-    loop do  
-      print "( #{current.value} )  -> "
-      
-      # set tracer to the next node
-      current = current.next_node
+    return nil
+  end
 
-      unless current
-        puts '(nil)'
-        break
+  def peek_first
+    raise 'Cannot peek at element of an empty list.' if empty?
+
+    return @head.data
+  end
+
+  def peek_last
+    raise 'Cannot peek at element of an empty list.' if empty?
+
+    return @tail.data
+  end
+
+  # Remove first node in the linked-list
+  # O(1)
+  def remove_first
+    raise 'Cannot remove element from an empty list.' if empty?
+
+    # Extract the data off of the head node
+    # Move the head to the next node
+    data = @head.data
+    @head = @head.next_node
+    @size -= 1
+
+    # removes the same element from @tail, if it was final element/node
+    if empty?
+      @tail = nil
+    end
+
+    return data
+  end
+
+  # Remove last node in the linked-list
+  # O(n)
+  def remove_last
+    raise 'Cannot remove element from an empty list.' if empty?
+
+    # Extract the data off of the tail node
+    # Move the tail to the previous node
+    data = @tail.data
+    
+    if size < 2
+      return remove_first
+    else
+      each_cons(2) do |node, next_node|
+        if next_node.next_node == nil
+          @tail = node
+          @tail.next_node = nil
+          break
+        end
       end
+    end
+
+    @size -= 1
+
+    return data
+  end
+
+  # Remove a node at given index
+  # O(2n) -> reduces to -> O(n)
+  def remove_at index
+    raise ArgumentError.new("There is no value at the given index") if (index < 0 || index >= @size)
+
+    each_with_index do |node, enum_index|
+      return remove(node) if index == enum_index
+    end
+  end
+  
+  # returns the (first) index of a given value in the list
+  # returns -1 if the value does not exist
+  # O(n)
+  def index_of element
+    # Can search for nil values
+    if element == nil
+      each_with_index do |node, index|
+        return index if node.data == nil
+      end
+      # searching for non-nil values
+    else
+      each_with_index do |node, index|
+        return index if node.data == element
+      end
+    end
+
+    return -1
+  end
+
+  # Returns whether or not an element exists in this linked-list
+  def contains? element
+    return (index_of(element) != -1)
+  end
+
+  # Shows the linked list represented as a string
+  # enclosed in square-brackets
+  def to_s
+    print "[ "
+
+    each do |node|
+      print "#{node.data}"
+      print ", " unless node.next_node == nil
+    end
+
+    print " ]\n"
+  end
+
+  # Allows this item to be a ruby Enumerator
+  # We can use this in other methods
+  def each
+    return enum_for(__method__) unless block_given?
+    return if @head.nil?
+
+    traverser = @head
+
+    until traverser.nil?
+      yield traverser
+      traverser = traverser.next_node
     end
   end
 
+  # Make Node as `private` as Ruby can
+  private_constant :Node
+
   private
-  
-  attr_writer :head
+
+  # Removes a specific Node instance from the list
+  def remove node
+    # if the node is at beginning or end of list
+    # handle this separately
+    return remove_first if node == @head
+    return remove_last if node == @tail
+
+    # store the data, so we can return it
+    data = node.data
+
+    # iterate through nodes, two at a time
+    each_cons(2) do |search_node, next_node|
+      # if our second item in a pair is the node we are looking for
+      if next_node == node
+        # then make the previous node's (i.e the search_node) next node equal to the FOLLOWING
+        search_node.next_node = next_node.next_node
+        next_node = nil
+        break
+      end
+    end
+
+    @size -= 1
+
+    return data
+  end
 end

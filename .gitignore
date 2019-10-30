@@ -1,0 +1,16 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+.DS_STORE
+
+# NPM
+node_modules/
+npm-debug.log
+
+# Old/Bad Versions of Data Structures or Algorithms
+/linked-lists/singly_linked_list-old.rb

@@ -56,7 +56,7 @@ class LinkedList
     return nil
   end
 
-  # Add an element to the tail of the linked list
+  # Add an element to the beginning of the linked list
   # O(1)
   def add_first element
     if empty?
