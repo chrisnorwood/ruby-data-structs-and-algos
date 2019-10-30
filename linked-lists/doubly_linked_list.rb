@@ -3,6 +3,9 @@
 # # # # # # # # # # # # # # # # # # #
 
 class LinkedList
+  # including Enumerable, and defining #each allows me full power of Enumerable in this Class
+  include Enumerable
+
   attr_reader :size
 
   ##########################################
@@ -128,60 +131,24 @@ class LinkedList
   def remove_at index
     raise ArgumentError.new("There is no value at the given index") if (index < 0 || index >= @size)
 
-    traverse_node = nil
-
-    # Search from front of the list
-    if (index < @size / 2)
-      # Set iterator count
-      i = 0
-      # Set traverse node to @head
-      traverse_node = @head 
-
-      while i != index 
-        traverse_node = traverse_node.next_node
-        i += 1
-      end
-
-      # Search from back of the list
-    else
-      # Set iterator count to 'last index'
-      i = @size - 1
-      # Set traverse node to @tail
-      traverse_node = @tail
-
-      while i != index 
-        traverse_node = traverse_node.next_node
-        i -= 1
-      end
+    each_with_index do |node, enum_index|
+      return remove(node) if index == enum_index
     end
-
-    return remove(traverse_node)
   end
   
   # returns the (first) index of a given value in the list
   # returns -1 if the value does not exist
   # O(n)
   def index_of element
-    index = 0
-    traverse_node = @head
-
     # Can search for nil values
     if element == nil
-      until traverse_node == nil
-        # Return index, if we found a match
-        return index if traverse_node.data == nil
-        # Move to next iteration
-        traverse_node = traverse_node.next_node
-        index += 1
+      each_with_index do |node, index|
+        return index if node.data == nil
       end
       # searching for non-nil values
     else
-      until traverse_node == nil
-        # Return index, if we found a match
-        return index if traverse_node.data == element
-        # Move to next iteration
-        traverse_node = traverse_node.next_node
-        index += 1
+      each_with_index do |node, index|
+        return index if node.data == element
       end
     end
 
@@ -197,13 +164,27 @@ class LinkedList
   # enclosed in square-brackets
   def to_s
     print "[ "
-    traverse_node = @head
-    until traverse_node == nil
-      print "#{traverse_node.data}"
-      traverse_node = traverse_node.next_node
-      print ", " unless traverse_node == nil
+
+    each do |node|
+      print "#{node.data}"
+      print ", " unless node.next_node == nil
     end
+
     print " ]\n"
+  end
+
+  # Allows this item to be a ruby Enumerator
+  # We can use this in other methods
+  def each
+    return enum_for(__method__) unless block_given?
+    return if @head.nil?
+
+    traverser = @head
+
+    until traverser.nil?
+      yield traverser
+      traverser = traverser.next_node
+    end
   end
 
   # Make Node as `private` as Ruby can
