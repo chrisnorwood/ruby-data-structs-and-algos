@@ -15,7 +15,7 @@ class BinaryHeap
     @map = {}
 
     unless array.nil?
-      raise "can only initialize BinaryHeap with array of values" unless array.kind_of?(Array)
+      raise "can only initialize BinaryHeap with array of values, or empty argument" unless array.kind_of?(Array)
      
       array.each { |item| add(item) }
     end
@@ -46,42 +46,6 @@ class BinaryHeap
     map_add(value, new_item_index)
     # swim it upward ("bubble up") to where it belongs
     swim(new_item_index)
-  end
-
-  # Adds a node value and its index to the @map
-  def map_add value, index
-    sorted_set = @map[value]
-
-    if sorted_set.nil?
-      sorted_set = SortedSet.new.add(index)
-
-      @map[value] = sorted_set
-    else
-      # a key already, so just add the index into its sorted set
-      sorted_set.add(index)
-    end
-  end
-
-  # swaps the indexes for two values
-  def map_swap value_i, value_j, index_i, index_j
-    set_i = @map[value_i]
-    set_j = @map[value_j]
-
-    set_i.delete?(index_i)
-    set_j.delete?(index_j)
-
-    set_i.add(index_j)
-    set_j.add(index_i)
-  end
-
-  # removes a value from the hash map
-  def remove_from_map value, index
-    # Recreates `value`s SortedSet without the given index
-    @map[value].delete?(index)
-
-    # Remove this value from our map, if the sorted set is now empty
-    # i.e. no more elements exists in our heap with that value
-    @map.delete(value) if @map[value].empty?
   end
 
   # Removes an item at particular index
@@ -121,6 +85,31 @@ class BinaryHeap
 
     return !index.nil?
   end
+
+  # using our hash map, this runs at:
+  # O(1)
+  def contains? value
+    return false if value.nil?
+
+    @map.has_key?(value)
+  end
+
+  def size
+    @heap.size
+  end
+
+  def empty?
+    @heap.empty?
+  end
+
+  def clear
+    @heap.clear
+    @map.clear
+
+    return nil
+  end
+
+  private
 
   # perform a top-down, "bubble down" for the item
   # located at `index` in the heap array
@@ -172,44 +161,51 @@ class BinaryHeap
     map_swap(value_i, value_j, i, j)
   end
 
-  # using our hash map, this runs at:
-  # O(1)
-  def contains? element
-    return false if element.nil?
+  # Adds a node value and its index to the @map
+  def map_add value, index
+    sorted_set = @map[value]
 
-    @map.has_key?(element)
+    if sorted_set.nil?
+      sorted_set = SortedSet.new.add(index)
+
+      @map[value] = sorted_set
+    else
+      # a key already, so just add the index into its sorted set
+      sorted_set.add(index)
+    end
   end
 
-  def size
-    @heap.size
+  # swaps the indexes for two values
+  def map_swap value_i, value_j, index_i, index_j
+    set_i = @map[value_i]
+    set_j = @map[value_j]
+
+    set_i.delete?(index_i)
+    set_j.delete?(index_j)
+
+    set_i.add(index_j)
+    set_j.add(index_i)
   end
 
-  def empty?
-    @heap.empty?
+  # removes a value from the hash map
+  def remove_from_map value, index
+    # Recreates `value`s SortedSet without the given index
+    @map[value].delete?(index)
+
+    # Remove this value from our map, if the sorted set is now empty
+    # i.e. no more elements exists in our heap with that value
+    @map.delete(value) if @map[value].empty?
   end
 
-  def clear
-    @heap.clear
-    @map.clear
+  # checks if value exists in our map
+  # if numerous values exist, we choose
+  # the highest index (arbitrarily)
+  def map_get_index_of value
+    sorted_set = @map[value]
+    return nil if sorted_set.nil?
 
-    return nil
+    return sorted_set.to_a.last
   end
-
-
-  # def to_s
-  #   num_levels = levels_in_tree
-  #   branches = "/ \\"
-
-
-  #   print "\n"
-  #               0
-  #               |   \
-  #               0      55
-  #               |  \  |  \
-  #   print "\n"
-  # end
-
-  private
 
   # return true if values in @heap[i] <= @heap[j]
   # assumes both are valid indices
@@ -221,15 +217,5 @@ class BinaryHeap
     return 0 if empty?
 
     1 + Math.log2(size).floor
-  end
-
-  # checks if value exists in our map
-  # if numerous values exist, we choose
-  # the highest index (arbitrarily)
-  def map_get_index_of value
-    sorted_set = @map[value]
-    return nil if sorted_set.nil?
-
-    return sorted_set.to_a.last
   end
 end
