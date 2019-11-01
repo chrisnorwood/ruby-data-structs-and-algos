@@ -113,6 +113,8 @@ Queue.empty?
 
 Queue.offer(element)
 
+Queue.poll
+
 Queue.peek
 
 Queue.each(&block)
