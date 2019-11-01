@@ -10,6 +10,7 @@
   - [Queue](#queue)
   - [Priority Queues/Heaps](#priority-queues)
     - [Min PQ with a Binary Heap](#min-pq-with-binary-heap)
+  - [Union Find](#union-find)
 
 ## About
 This repository contains a collection of common data structures and algorithms implemented in Ruby. It is a work-in-progress. The public APIs that these expose can be found in the following sections.
@@ -40,17 +41,15 @@ LinkedList.empty?
 
 LinkedList.add(element)
 
-LinkedList.add_last
-
 LinkedList.add_first
+
+LinkedList.add_last
 
 LinkedList.remove_first
 
 LinkedList.remove_last
 
 LinkedList.peek_first
-
-LinkedList.peek_last
 
 LinkedList.peek_last
 
@@ -129,7 +128,7 @@ Queue.each(&block)
 
 [*View Source Code Here*](priority-queues-heaps/binary_heap.rb)
 
-This is a min. priority queue, implemented as a Binary Heap.  All values must be of comparable and of the same type.
+This is a min. priority queue, implemented as a Binary Heap.  All values should be comparable and of the same type. This implementation uses a hash table, storing heap item values as keys to their indices to support O(log n) removals.
 
 Available methods:
 
@@ -154,4 +153,27 @@ BinaryHeap.remove(value)
 BinaryHeap.contains?(value)
 
 BinaryHeap.clear
+```
+
+## Union Find
+
+[*View Source Code Here*](union-find/union_find.rb)
+
+This is a union find implementation, that includes path compression for greater time-efficiency.
+
+The current implementation is not based on any particular type of nodes/elements. Rather it identifies nodes by 'number', sequentially from `0 -> initial_size - 1`. Groups are identified by their root element's "number".
+
+Available methods:
+
+```ruby
+UnionFind.new(integer_size)
+
+# Finds the group node_id belongs to
+UnionFind.find(node_id)
+
+UnionFind.unify(node_id_1, node_id_2)
+
+UnionFind.connected?(node_id_1, node_id_2)
+
+UnionFind.group_size(node_id)
 ```
