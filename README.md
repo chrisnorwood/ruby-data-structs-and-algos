@@ -65,7 +65,8 @@ LinkedList.to_s
 LinkedList.each(&block)
 
 
-# the Enumerable module is included in each, and as such, Stack can use all the methods available for Enumerable objects.
+# the Enumerable module is included in each, and as such, LinkedList can use all
+# methods available for Enumerable objects.
 ```
 
 ## Stack
@@ -90,7 +91,8 @@ Stack.pop
 Stack.each(&block)
 
 
-# the Enumerable module is included, and as such, Stack can use all the methods available for Enumerable objects.
+# the Enumerable module is included, and as such, Stack can use all
+# methods available for Enumerable objects.
 
 ```
 
@@ -116,7 +118,8 @@ Queue.peek(element)
 Queue.each(&block)
 
 
-# the Enumerable module is included, and as such, Queue can use all the methods available for Enumerable objects.
+# the Enumerable module is included, and as such, Queue can use all methods 
+# available for Enumerable objects.
 ```
 
 ## Priority Queues
