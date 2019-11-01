@@ -10,7 +10,7 @@ class BinaryHeap
   def initialize array = nil
     # to keep track of our items
     @heap = []
-    # map for log(n) removals
+    # map allows for log(n) removals
     # { value: SortedSet }
     @map = {}
 
