@@ -1,8 +1,14 @@
-# Min priority queue implementation
-# using a binary heap
-# ALL items added should be comparable with each other
+# Min priority queue implementation using a binary heap
 # 
-# Todo: figure out how to ONLY allow a singular type of comparable data
+# - Uses hash table to support O(log n) removals
+# - All items added should be comparable with each other
+#
+# - current implmentation assumes the inputs ARE priorities themselves,
+#   but could be changed to read a "priority" attribute off of any element
+#   type, for example
+# 
+# Todo: raise errors if subsequently added elements are not comparable
+#       to current heap items
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 class BinaryHeap
