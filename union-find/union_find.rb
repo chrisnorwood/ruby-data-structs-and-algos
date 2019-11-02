@@ -2,7 +2,9 @@
 # path compression for greater efficiency
 #
 # - current implementation is not based on any particular type
-#   of nodes/elements, rather it works with nodes of subsequently
+#   of nodes/elements, rather it works with nodes
+#   described by sequential numbering, and groups identified by their
+#   parent elements "number"
 # # # # # # # # # # # # # # # # # # # # # # # #
 
 class UnionFind
