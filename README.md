@@ -21,11 +21,11 @@ This repository contains a collection of common data structures and algorithms i
 
 ### Singly Linked List
 
-[*View Source Code Here*](linked-lists/singly_linked_list.rb)
+[*View Source Code Here*](data-structures/linked-lists/singly_linked_list.rb)
 
 ### Doubly Linked List
 
-[*View Source Code Here*](linked-lists/doubly_linked_list.rb)
+[*View Source Code Here*](data-structures/linked-lists/doubly_linked_list.rb)
 
 
 Both linked-lists expose the same API.
@@ -69,7 +69,7 @@ LinkedList.each(&block)
 ```
 
 ## Stack
-[*View Source Code Here*](stacks/stack.rb)
+[*View Source Code Here*](data-structures/stacks/stack.rb)
 
 This stack is implemented with the doubly linked list also found in this repository.
 
@@ -96,7 +96,7 @@ Stack.each(&block)
 ```
 
 ## Queue
-[*View Source Code Here*](queues/queue.rb)
+[*View Source Code Here*](data-structures/queues/queue.rb)
 
 This queue is implemented with the doubly linked list also found in this repository.
 
@@ -126,7 +126,7 @@ Queue.each(&block)
 ## Priority Queues
 ### Min PQ with Binary Heap
 
-[*View Source Code Here*](priority-queues-heaps/binary_heap.rb)
+[*View Source Code Here*](data-structures/priority-queues-heaps/binary_heap.rb)
 
 This is a min. priority queue, implemented as a Binary Heap.  All values should be comparable and of the same type. This implementation uses a hash table, storing heap item values as keys to their indices to support O(log n) removals.
 
@@ -157,7 +157,7 @@ BinaryHeap.clear
 
 ## Union Find
 
-[*View Source Code Here*](union-find/union_find.rb)
+[*View Source Code Here*](data-structures/union-find/union_find.rb)
 
 This is a union find implementation, that includes path compression for greater time-efficiency.
 
